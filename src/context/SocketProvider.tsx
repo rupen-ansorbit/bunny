@@ -37,9 +37,14 @@ export const SocketProvider = ({ children }: any) => {
   const socket = useRef<any>(null);
 
   useEffect(() => {
-    socket.current = connect(process.env.NEXT_PUBLIC_BASE_URL as string, {
-      path: '/api/socketio',
-    });
+    socket.current = connect(
+      process.env.NODE_ENV !== 'development'
+        ? (process.env.NEXT_PUBLIC_PRODUCTION_URL as string)
+        : (process.env.NEXT_PUBLIC_BASE_URL as string),
+      {
+        path: '/api/socketio',
+      }
+    );
 
     socket.current.on('connect', () => {
       const name = prompt('Enter your name:');
