@@ -37,7 +37,7 @@ export const SocketProvider = ({ children }: any) => {
   const socket = useRef<any>(null);
 
   useEffect(() => {
-    socket.current = connect('http://localhost:3000', {
+    socket.current = connect(process.env.NEXT_PUBLIC_BASE_URL as string, {
       path: '/api/socketio',
     });
 
