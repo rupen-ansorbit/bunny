@@ -7,7 +7,7 @@ export default function handler(
 ) {
   try {
     if (req.method === 'POST' && res.socket.server.io) {
-      res.socket.server.io.emit('message', req.body);
+      res.socket.server.io.emit('add user', req.body);
       return res.status(200).json(req.body);
     }
   } catch (error) {
