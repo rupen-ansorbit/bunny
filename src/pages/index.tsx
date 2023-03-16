@@ -1,6 +1,5 @@
 import Area from '@/components/Area/Area';
-import Header from '@/components/Header/Header';
-import Notification from '@/components/Notification/Notification';
+// import Header from '@/components/Header/Header';
 import Head from 'next/head';
 
 export default function Home() {
@@ -14,9 +13,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className=" min-h-screen flex flex-col">
-        <Header />
-        <Notification />
+      <div className="h-screen w-screen flex flex-col">
+        {/* <Header /> */}
         <Area />
       </div>
     </>

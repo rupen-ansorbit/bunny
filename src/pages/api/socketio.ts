@@ -44,7 +44,7 @@ export default function Handler(
 
       if (user) {
         io.to(user.room).emit('message', {
-          user: 'ADMIN',
+          user: '*',
           text: `${user.name} has left`,
         });
 
@@ -66,12 +66,12 @@ export default function Handler(
 
       if (user) {
         socket.emit('message', {
-          user: 'ADMIN',
+          user: '*',
           text: `${user.name}, Welcome to room ${user.room}`,
         });
 
         socket.broadcast.to(user.room).emit('message', {
-          user: 'ADMIN',
+          user: '*',
           text: `${user.name} has joined`,
         });
 
