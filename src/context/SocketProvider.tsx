@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import {
   createContext,
   Dispatch,
@@ -42,6 +43,7 @@ export const SocketProvider = ({ children }: any) => {
   const [activeUsers, setActiveUsers] = useState<IActiveUser[]>([]);
   const socket = useRef<any>(null);
   const isSocketInitialize = useRef<boolean>(false);
+  const router = useRouter();
 
   const socketInitialize = useCallback(async () => {
     isSocketInitialize.current = true;
@@ -50,21 +52,24 @@ export const SocketProvider = ({ children }: any) => {
     socket.current = io();
 
     socket.current.on('connect', () => {
-      const name = prompt('Enter your name:');
-      const userName = name ? name : 'User_' + socket.current.id;
+      const userName = prompt('Enter your name:');
+      const roomName =
+        router.asPath === '/' ? 'General' : router.asPath.split('?')[1];
 
-      setUser(userName);
-      setConnected(true);
+      if (roomName && userName) {
+        setUser(userName);
+        setConnected(true);
 
-      socket.current.emit(
-        'join',
-        { name: userName, room: 'room' },
-        (error: string) => {
-          if (error) {
-            alert(error);
+        socket.current.emit(
+          'join',
+          { name: userName, room: roomName },
+          (error: string) => {
+            if (error) {
+              alert(error);
+            }
           }
-        }
-      );
+        );
+      }
     });
 
     socket.current.on('message', (message: MessagePayload) => {

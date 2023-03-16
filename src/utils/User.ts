@@ -18,23 +18,14 @@ const addUser = ({ id, name, room }: UserPayloadData) => {
 };
 
 const removeUser = (id: string) => {
-  const index = users.findIndex((user) => {
-    user.id === id;
-  });
-
-  console.log('index', index);
-
-  if (index === -1) {
-    return users.splice(index, 1)[0];
-  }
+  const index = users.findIndex((user) => user.id === id);
+  if (index !== -1) return users.splice(index, 1)[0];
 };
 
-const getUser = (id: string) => {
-  return users.find((user) => user.id === id) as UserPayloadData;
-};
+const getUser = (id: string) =>
+  users.find((user) => user.id === id) as UserPayloadData;
 
-const getUsersInRoom = (room: string) => {
-  return users.filter((user) => user.room === room);
-};
+const getUsersInRoom = (room: string) =>
+  users.filter((user) => user.room === room);
 
 export { addUser, removeUser, getUser, getUsersInRoom };
