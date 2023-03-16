@@ -6,10 +6,10 @@ export default function Notification() {
 
   return (
     <div className="bg-green-300 text-green-800 p-3 text-xs flex gap-1 items-center">
-      <div>Conncted Users :</div>
-      <div>
-        {activeUsers.map((user) => (
-          <p key={user.id}>{user.name}</p>
+      <div className="font-bold">Active Users :</div>
+      <div className="flex gap-1 font-mono">
+        {activeUsers.map((user, index) => (
+          <p key={index}>{user.name}, </p>
         ))}
       </div>
     </div>

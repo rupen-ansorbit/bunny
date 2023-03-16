@@ -2,15 +2,16 @@ import {
   createContext,
   Dispatch,
   SetStateAction,
+  useCallback,
   useEffect,
   useRef,
   useState,
 } from 'react';
-import { connect } from 'socket.io-client';
+import io from 'socket.io-client';
 
 export interface IMsg {
   user: string;
-  msg: string;
+  text: string;
 }
 
 export interface IActiveUser {
@@ -18,11 +19,16 @@ export interface IActiveUser {
   id: string;
 }
 
+export interface MessagePayload {
+  user: string;
+  text: string;
+}
+
 export type SocketContextType = {
   connected: boolean;
   setConnected: Dispatch<SetStateAction<boolean>>;
   user: string;
-  chat: IMsg[];
+  messages: IMsg[];
   socket: any;
   activeUsers: IActiveUser[];
 };
@@ -32,58 +38,57 @@ export const SocketContext = createContext<SocketContextType | null>(null);
 export const SocketProvider = ({ children }: any) => {
   const [connected, setConnected] = useState<boolean>(false);
   const [user, setUser] = useState<string>('');
-  const [chat, setChat] = useState<IMsg[]>([]);
+  const [messages, setMessages] = useState<IMsg[]>([]);
   const [activeUsers, setActiveUsers] = useState<IActiveUser[]>([]);
   const socket = useRef<any>(null);
+  const isSocketInitialize = useRef<boolean>(false);
 
-  useEffect(() => {
-    socket.current = connect(
-      process.env.NODE_ENV !== 'development'
-        ? (process.env.NEXT_PUBLIC_PRODUCTION_URL as string)
-        : (process.env.NEXT_PUBLIC_BASE_URL as string),
-      {
-        path: '/api/socketio',
-      }
-    );
+  const socketInitialize = useCallback(async () => {
+    isSocketInitialize.current = true;
+    await fetch('/api/socketio');
+
+    socket.current = io();
 
     socket.current.on('connect', () => {
       const name = prompt('Enter your name:');
       const userName = name ? name : 'User_' + socket.current.id;
+
       setUser(userName);
       setConnected(true);
 
-      const newUser: IActiveUser = {
-        name: userName,
-        id: socket.current.id,
-      };
-
-      try {
-        fetch('/api/newuser', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newUser),
-        });
-      } catch (error) {
-        console.log(error);
-      }
+      socket.current.emit(
+        'join',
+        { name: userName, room: 'room' },
+        (error: string) => {
+          if (error) {
+            alert(error);
+          }
+        }
+      );
     });
 
-    socket.current.on('add user', (newuser: IActiveUser) => {
-      setActiveUsers((prev) => [...prev, newuser]);
+    socket.current.on('message', (message: MessagePayload) => {
+      setMessages((messages) => [...messages, message]);
     });
 
-    socket.current.on('message', (msg: IMsg) => {
-      setChat((prev) => [...prev, msg]);
+    socket.current.on('room', ({ users }: any) => {
+      setActiveUsers(users);
     });
-
-    if (socket.current) return () => socket.current.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (!isSocketInitialize.current) socketInitialize();
+
+    if (socket.current) {
+      return () => {
+        socket.current.disconnect();
+      };
+    }
+  }, [socketInitialize]);
 
   return (
     <SocketContext.Provider
-      value={{ activeUsers, connected, setConnected, user, chat, socket }}
+      value={{ activeUsers, connected, setConnected, user, messages, socket }}
     >
       {children}
     </SocketContext.Provider>
