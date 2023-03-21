@@ -15,4 +15,15 @@ module.exports = withPWA({
   },
 });
 
+module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: '/api/*',
+        destination: 'https://bunnychat.vercel.app/*',
+      },
+    ];
+  },
+};
+
 module.exports = nextConfig;
