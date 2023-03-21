@@ -4,7 +4,7 @@ import {
   getUsersInRoom,
   removeUser,
   UserPayloadData,
-} from './utils/User';
+} from './utils/user';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import http from 'http';
