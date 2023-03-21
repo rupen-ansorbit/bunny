@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useLocation } from 'react-router-dom';
 import {
   createContext,
   Dispatch,
@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import io from 'socket.io-client';
+import { socket } from '../utils/socket';
 
 export interface IMsg {
   user: string;
@@ -41,26 +41,22 @@ export const SocketProvider = ({ children }: any) => {
   const [user, setUser] = useState<string>('');
   const [messages, setMessages] = useState<IMsg[]>([]);
   const [activeUsers, setActiveUsers] = useState<IActiveUser[]>([]);
-  const socket = useRef<any>(null);
   const isSocketInitialize = useRef<boolean>(false);
-  const router = useRouter();
+  const location = useLocation();
 
   const socketInitialize = useCallback(async () => {
     isSocketInitialize.current = true;
-    await fetch('/api/socketio');
 
-    socket.current = io();
-
-    socket.current.on('connect', () => {
+    socket.on('connect', () => {
       const userName = prompt('Enter your name:');
       const roomName =
-        router.asPath === '/' ? 'General' : router.asPath.split('?')[1];
+        location.pathname === '/' ? 'General' : location.pathname.split('?')[1];
 
       if (roomName && userName) {
         setUser(userName);
         setConnected(true);
 
-        socket.current.emit(
+        socket.emit(
           'join',
           { name: userName, room: roomName },
           (error: string) => {
@@ -72,23 +68,17 @@ export const SocketProvider = ({ children }: any) => {
       }
     });
 
-    socket.current.on('message', (message: MessagePayload) => {
+    socket.on('message', (message: MessagePayload) => {
       setMessages((messages) => [...messages, message]);
     });
 
-    socket.current.on('room', ({ users }: any) => {
+    socket.on('room', ({ users }: any) => {
       setActiveUsers(users);
     });
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!isSocketInitialize.current) socketInitialize();
-
-    if (socket.current) {
-      return () => {
-        socket.current.disconnect();
-      };
-    }
   }, [socketInitialize]);
 
   return (

@@ -1,9 +1,8 @@
-import Image from 'next/image';
 import React, { useContext } from 'react';
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { SocketContext, SocketContextType } from '@/context/SocketProvider';
+import { SocketContext, SocketContextType } from '../../context/SocketProvider';
 
 const navigation = [{ name: 'Dashboard', href: '/', current: true }];
 
@@ -15,13 +14,13 @@ export default function Header() {
   const { user } = useContext(SocketContext) as SocketContextType;
   return (
     <Disclosure as="nav" className="bg-gray-800 sticky top-0">
-      {({ open }) => (
+      {({ open }: any) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <Image
+                  <img
                     className="h-8 w-8"
                     src="/favicon.ico"
                     alt="Your Company"
@@ -64,7 +63,7 @@ export default function Header() {
                     <div>
                       <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                         <span className="sr-only">Open user menu</span>
-                        <Image
+                        <img
                           className="h-8 w-8 rounded-full"
                           src={'https://i.pravatar.cc/300'}
                           alt="profile image"
@@ -112,7 +111,7 @@ export default function Header() {
             <div className="border-t border-gray-700 pt-4 pb-3">
               <div className="flex items-center px-5">
                 <div className="flex-shrink-0">
-                  <Image
+                  <img
                     className="h-10 w-10 rounded-full"
                     src={'https://i.pravatar.cc/300'}
                     alt="profile image"

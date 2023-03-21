@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import SendOutline from '@/assets/send.png';
-import Image from 'next/image';
-import { SocketContext, SocketContextType } from '@/context/SocketProvider';
+import SendOutline from '../../assets/send.png';
+import { SocketContext, SocketContextType } from '../../context/SocketProvider';
 
 export default function Area() {
   const [message, setMessage] = useState<string>('');
@@ -13,7 +12,7 @@ export default function Area() {
 
   const sendMessage = async () => {
     if (message.trim() && connected) {
-      socket.current.emit('sendMessage', message.trim(), () => setMessage(''));
+      socket.emit('sendMessage', message.trim(), () => setMessage(''));
     }
   };
 
@@ -41,7 +40,7 @@ export default function Area() {
                 <pre className="flex text-xs flex-1 text-green-600">
                   Active Users
                   <span>: </span>
-                  {activeUsers?.map((user, index) => (
+                  {activeUsers?.map((user: any, index: any) => (
                     <div key={index}>
                       <span>{user.name}</span>
                       {activeUsers.length - 1 !== index && <span>,</span>}
@@ -49,7 +48,7 @@ export default function Area() {
                   ))}
                 </pre>
               </div>
-              {messages?.map((messages, index) => (
+              {messages?.map((messages: any, index: any) => (
                 <div key={index} className="flex gap-3 items-start">
                   <div
                     className={`${
@@ -91,13 +90,13 @@ export default function Area() {
               onKeyDown={handleKeyDown}
               value={message}
             />
-            <Image
-              onClick={sendMessage}
+            <img
               src={SendOutline}
-              alt="send picture"
+              alt="send"
               width={25}
               height={25}
               className="cursor-pointer"
+              onClick={sendMessage}
             />
           </div>
         </div>
