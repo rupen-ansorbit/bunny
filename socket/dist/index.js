@@ -14,7 +14,7 @@ const port = 8000 || process.env.PORT;
 const server = http_1.default.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: 'https://bunnychat.vercel.app',
         methods: ['GET', 'POST'],
     },
 });
