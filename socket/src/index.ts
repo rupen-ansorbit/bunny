@@ -31,6 +31,10 @@ app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'Socket is running ⭐' });
 });
 
+app.get('/ping', () => {
+  return 'Pong';
+});
+
 io.on('connection', (socket: any) => {
   console.log('A User Connected');
 
