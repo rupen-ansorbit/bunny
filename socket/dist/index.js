@@ -10,7 +10,7 @@ const http_1 = __importDefault(require("http"));
 const app = (0, express_1.default)();
 const { Server } = require('socket.io');
 app.use((0, cors_1.default)());
-const port = 8000 || process.env.PORT;
+const port = process.env.PORT || 8000;
 const server = http_1.default.createServer(app);
 const io = new Server(server, {
     cors: {
