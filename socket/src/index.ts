@@ -8,6 +8,8 @@ import {
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import http from 'http';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const { Server } = require('socket.io');
