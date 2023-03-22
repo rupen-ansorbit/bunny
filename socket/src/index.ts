@@ -31,8 +31,8 @@ app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'Socket is running ⭐' });
 });
 
-app.get('/ping', () => {
-  return 'Pong';
+app.get('/ping', (req: Request, res: Response) => {
+  res.json({ message: 'Pong' + port });
 });
 
 io.on('connection', (socket: any) => {

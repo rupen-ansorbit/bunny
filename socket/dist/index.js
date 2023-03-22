@@ -21,8 +21,8 @@ const io = new Server(server, {
 app.get('/', (req, res) => {
     res.json({ message: 'Socket is running ⭐' });
 });
-app.get('/ping', () => {
-    return 'Pong';
+app.get('/ping', (req, res) => {
+    res.json({ message: 'Pong' + port });
 });
 io.on('connection', (socket) => {
     console.log('A User Connected');
