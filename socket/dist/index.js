@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
     res.json({ message: 'Socket is running ⭐' });
 });
 app.get('/ping', (req, res) => {
-    res.json({ message: 'Pong' + port });
+    res.json({ message: 'Pong ' + port + ' ' + process.env.PORT });
 });
 io.on('connection', (socket) => {
     console.log('A User Connected');

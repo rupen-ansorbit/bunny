@@ -32,7 +32,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.get('/ping', (req: Request, res: Response) => {
-  res.json({ message: 'Pong' + port });
+  res.json({ message: 'Pong ' + port + ' ' + process.env.PORT });
 });
 
 io.on('connection', (socket: any) => {
